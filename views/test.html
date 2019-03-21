@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Test Stream</title>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+    <video id="video"></video>
+    <script>
+      if (Hls.isSupported()) {
+        var video = document.getElementById('video');
+        var hls = new Hls();
+        // bind them together
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MEDIA_ATTACHED, function () {
+          console.log("video and hls.js are now bound together !");
+          hls.loadSource("http://localhost:3000/live/index.m3u8");
+          hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+            console.log("manifest loaded, found " + data.levels.length + " quality level");
+          });
+        });
+      }
+    </script>
+</body>
+</html>
