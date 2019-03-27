@@ -3,7 +3,9 @@ const app = express()
 const start_server = require('./routes/start-server')
 const stop_server = require('./routes/stop-server')
 
-app.use('/live', (req,res,next)=>{
+const common_opt = require('./config/common').common_option
+
+app.use(common_opt.liveOutputPath, (req,res,next)=>{
     if (require('./config/util').server_status !== 1){
         res.status(404)
         return res.end()
@@ -11,7 +13,7 @@ app.use('/live', (req,res,next)=>{
     next()
 })
 
-app.use('/live', express.static('__TEMP/video/', {
+app.use('/live', express.static(common_opt.tempVideoPath, {
     setHeaders: (res,path) =>{
         res.set("Access-Control-Allow-Origin", "*");
         res.set("Access-Control-Allow-Headers", "Content-Type,X-Requested-With");
@@ -28,8 +30,6 @@ app.use((req, res, next) => {
 
     // -----------------------------------------------------------------------
     // authentication middleware
-  
-    const auth = {login: 'user', password: 'password'} // change this
 
     // parse login and password from headers
     const b64auth = (req.headers.authorization || '').split(' ')[1] || ''
@@ -37,7 +37,7 @@ app.use((req, res, next) => {
     
     if ((req.url.split('.')[1]!=='ts')){
         // Verify login and password are set and correct
-        if (!login || !password || login !== auth.login || password !== auth.password){
+        if (!login || !password || login !== common_opt.httpAuthUser || password !== common_opt.httpAuthPassword){
           res.set('WWW-Authenticate', 'Basic realm="Who are you?"')
           res.status(401).send('Authentication required.') // custom message
           return
