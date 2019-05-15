@@ -3,9 +3,9 @@ const app = express()
 const start_server = require('./routes/start-server')
 const stop_server = require('./routes/stop-server')
 
-const common_opt = require('./config/common').common_option
+const config = require('./config/common').config
 
-app.use(common_opt.liveOutputPath, (req,res,next)=>{
+app.use(config.liveOutputPath, (req,res,next)=>{
     if (require('./config/util').server_status !== 1){
         res.status(404)
         return res.end()
@@ -13,7 +13,7 @@ app.use(common_opt.liveOutputPath, (req,res,next)=>{
     next()
 })
 
-app.use('/live', express.static(common_opt.tempVideoPath, {
+app.use('/live', express.static(config.tempVideoPath, {
     setHeaders: (res,path) =>{
         res.set("Access-Control-Allow-Origin", "*");
         res.set("Access-Control-Allow-Headers", "Content-Type,X-Requested-With");
@@ -37,7 +37,7 @@ app.use((req, res, next) => {
     
     if ((req.url.split('.')[1]!=='ts')){
         // Verify login and password are set and correct
-        if (!login || !password || login !== common_opt.httpAuthUser || password !== common_opt.httpAuthPassword){
+        if (!login || !password || login !== config.httpAuthUser || password !== config.httpAuthPassword){
           res.set('WWW-Authenticate', 'Basic realm="Who are you?"')
           res.status(401).send('Authentication required.') // custom message
           return
@@ -53,4 +53,4 @@ app.use('/start-server', start_server)
 app.use('/stop-server', stop_server)
 
 
-app.listen(3000)
+app.listen(config.http_server_port?config.http_server_port:3030)
