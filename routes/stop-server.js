@@ -6,10 +6,16 @@ router.get('/', (req,res,next)=>{
         const ffmpeg_command = require('../encoder').command
         ffmpeg_command.ffmpegProc.stdin.write('q')
         require('../config/util').server_status = 0
-        res.end('<h1>Server has been stopped</h1>')
+        res.statatus(200).json({
+            status: "success",
+            result: "Server stop successfully"
+        })
     }
     else{
-        res.end('<h1>Server is not running</h1>')
+        res.status(200).json({
+            status: "error",
+            result: "Server is not running"
+        })
     }
 })
 
