@@ -3,6 +3,7 @@ exports.config = {
     tempVideoPath : 'output/',
     hlsPlaylistBaseName: 'playlist.m3u8',  //Must be .m3u8 extension
     liveOutputPath: '/live',
-    httpAuthUser: 'admin',
-    httpAuthPassword: '1985'
+    //CREDENTIALS TO USED STREAMING SERVER. SET THESE VALUES BEFORE LAUNCHING
+    httpAuthUser: '',
+    httpAuthPassword: ''
 }
